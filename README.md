@@ -10,10 +10,15 @@ composer require --dev "chiroruxxxx/lucky-lint:dev-master"
 
 を実施後に、プロジェクトの phpcs.xml で以下のように設定してください。
 
+```xml
+<config name="installed_paths" value="vendor/chiroruxxxx/lucky-lint"/>
+<rule ref="LuckyLint" />
+```
+
 ### Manual
 コードをダウンロードし、プロジェクトの phpcs.xml で以下のように設定してください。
 ```xml
-<config name="installed_paths" value="vendor/chiroruxxxx/lucky-lint"/>
+<config name="installed_paths" value="/path/to/lucky-lint"/>
 <rule ref="LuckyLint" />
 ```
 
