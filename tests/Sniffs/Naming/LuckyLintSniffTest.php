@@ -14,7 +14,7 @@ class LuckyLintSniffTest extends TestCase
     public function testProcess(string $data, array $errorNames): void
     {
         $sniff = new LuckyLintSniff();
-        $file = $this->loadFile(__DIR__ . "/../../Data/$data", $sniff);
+        $file = $this->loadFile($data, $sniff);
         $this->assertErrors($file, $errorNames);
     }
 

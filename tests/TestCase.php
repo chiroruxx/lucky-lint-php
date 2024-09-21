@@ -12,7 +12,9 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function loadFile(string $filePath, Sniff $sniff): File
+    private const string DATA_FILE_DIR = __DIR__ . "/Data/";
+
+    protected function loadFile(string $filename, Sniff $sniff): File
     {
         $phpcs = new Runner();
         $phpcs->config = new Config(['-s']);
@@ -22,7 +24,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $phpcs->ruleset->populateTokenListeners();
 
-        $file = new LocalFile($filePath, $phpcs->ruleset, $phpcs->config);
+        $file = new LocalFile(self::DATA_FILE_DIR . $filename, $phpcs->ruleset, $phpcs->config);
         $file->process();
 
         return $file;
