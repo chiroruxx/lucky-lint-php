@@ -40,4 +40,9 @@ readonly class CheckResult
     {
         return $this->level;
     }
+
+    public function getLevelString(): string
+    {
+        return $this->level->toString();
+    }
 }

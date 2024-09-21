@@ -59,10 +59,10 @@ class LuckyLintSniff implements Sniff
     {
         $list = implode(',', LuckyChecker::list($minLevel));
         $phpcsFile->addError(
-            '"%s" is not lucky; stroke count: %d, lucky counts: %s',
+            '"%s" is not lucky; level: %s, stroke count: %d, lucky counts: %s',
             $result->getSeq(),
             $result->getType(),
-            [$result->getName(), $result->getCount(), $list]
+            [$result->getName(), $result->getLevelString(), $result->getCount(), $list]
         );
     }
 }

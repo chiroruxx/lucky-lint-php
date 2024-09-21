@@ -15,4 +15,14 @@ enum LuckyLevel: int
     {
         return $this->value < $another->value;
     }
+
+    public function toString(): string
+    {
+        return match ($this) {
+            self::LEVEL_3 => 'HIGH',
+            self::LEVEL_2 => 'MIDDLE',
+            self::LEVEL_1 => 'LOW',
+            self::LEVEL_0 => 'BAD',
+        };
+    }
 }
