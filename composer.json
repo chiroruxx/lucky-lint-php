@@ -1,0 +1,27 @@
+{
+    "name": "chiroruxxxx/lucky-lint",
+    "description": "lucky-lint checks whether your naming is good naming.",
+    "type": "phpcodesniffer-standard",
+    "license": "MIT",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Chiroruxxxx\\LuckyLint\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "chihiro",
+            "email": "dormir.kazu@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.3",
+        "squizlabs/php_codesniffer": "^3.10"
+    }
+}

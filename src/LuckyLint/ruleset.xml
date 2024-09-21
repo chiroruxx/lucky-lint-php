@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<ruleset name="LuckyLint">
+    <description>lucky-lint checks whether your naming is good naming.</description>
+</ruleset>
