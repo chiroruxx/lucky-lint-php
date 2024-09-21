@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Chiroruxxxx\LuckyLint\Strokes;
 
+use Chiroruxxxx\LuckyLint\Tokens\NameToken;
+
 class LuckyChecker
 {
-    // see https://meimeimaker.com/articles/strokes-alphabet.php
+    /** @see https://meimeimaker.com/articles/strokes-alphabet.php */
     private const array LEVEL_MAP = [
         0 => LuckyLevel::LEVEL_3,
         15 => LuckyLevel::LEVEL_3,
@@ -38,7 +40,15 @@ class LuckyChecker
         51 => LuckyLevel::LEVEL_1,
     ];
 
-    public static function check(int $count): LuckyLevel
+    public static function check(NameToken $token): CheckResult
+    {
+        $name = $token->getName();
+        $count = StrokeCounter::count($name);
+        $level = self::getLevel($count);
+        return new CheckResult($token, $count, $level);
+    }
+
+    private static function getLevel(int $count): LuckyLevel
     {
         $count = $count % 52;
 

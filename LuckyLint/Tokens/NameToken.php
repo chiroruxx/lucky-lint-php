@@ -6,7 +6,7 @@ namespace Chiroruxxxx\LuckyLint\Tokens;
 
 use RuntimeException;
 
-readonly class TargetToken
+readonly class NameToken
 {
     public string $type;
     public string $content;
@@ -14,6 +14,7 @@ readonly class TargetToken
     public function __construct(
         Token $token,
         public string $keywordType,
+        public int $keywordSeq,
     ) {
         $this->type = $token->type;
         $this->content = $token->content;
@@ -30,12 +31,12 @@ readonly class TargetToken
             case 'T_STRING':
                 return $this->content;
             default:
-                throw new RuntimeException("type {$this->type} is not supported");
+                throw new RuntimeException("type $this->type is not supported");
         }
     }
 
     public function __toString(): string
     {
-        return "{$this->type}: {$this->content}";
+        return "$this->type: $this->content";
     }
 }

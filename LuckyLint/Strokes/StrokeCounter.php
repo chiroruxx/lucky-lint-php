@@ -8,7 +8,7 @@ use RuntimeException;
 
 class StrokeCounter
 {
-    // see https://meimeimaker.com/articles/strokes-alphabet.php
+    /** @see https://meimeimaker.com/articles/strokes-alphabet.php */
     private const array COUNT_MAP = [
         'a' => 2,
         'b' => 2,
@@ -73,7 +73,7 @@ class StrokeCounter
 
         foreach ($chars as $char) {
             if (!isset(self::COUNT_MAP[$char])) {
-                throw new RuntimeException("{$char} is not found in count map");
+                throw new RuntimeException("$char is not found in count map");
             }
             $count += self::COUNT_MAP[$char];
         }
