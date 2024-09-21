@@ -33,18 +33,11 @@ class LuckyLintSniff implements Sniff
         ];
     }
 
-    public function process(File $phpcsFile, $stackPtr): ?int
+    public function process(File $phpcsFile, $stackPtr): void
     {
-        $minLevel = LuckyLevel::tryFrom($this->minLevel);
-        if ($minLevel === null || $minLevel === LuckyLevel::LEVEL_0) {
-            throw new InvalidArgumentException('minLevel is invalid.');
-        }
+        $minLevel = $this->getMinLevel();
 
-        $keywordToken = $this->getToken($phpcsFile, $stackPtr);
-        $tokens = $this->getTargetTokens($phpcsFile, $keywordToken);
-        if ($tokens === null) {
-            return null;
-        }
+        $tokens = $this->getTokens($phpcsFile, $stackPtr);
 
         foreach ($tokens as $token) {
             $name = $token->getName();
@@ -60,15 +53,30 @@ class LuckyLintSniff implements Sniff
                 );
             }
         }
-
-        return null;
     }
 
-    public function getToken(File $file, int $stackPtr): Token
+    private function getMinLevel(): LuckyLevel
+    {
+        $level = LuckyLevel::tryFrom($this->minLevel);
+        if ($level === null || $level === LuckyLevel::LEVEL_0) {
+            throw new InvalidArgumentException('minLevel is invalid.');
+        }
+
+        return $level;
+    }
+
+    /** @return array<int, TargetToken> */
+    private function getTokens(File $phpcsFile, int $stackPtr): array
+    {
+        $keywordToken = $this->getTokenFromFile($phpcsFile, $stackPtr);
+        return $this->getTargetTokens($phpcsFile, $keywordToken);
+    }
+
+    private function getTokenFromFile(File $file, int $stackPtr): Token
     {
         $phpcsTokens = $file->getTokens();
         if (!isset($phpcsTokens[$stackPtr])) {
-            throw new RuntimeException("token is not found at {$stackPtr}");
+            throw new RuntimeException("token is not found at $stackPtr");
         }
         $phpcsToken = $phpcsTokens[$stackPtr];
 
@@ -81,7 +89,7 @@ class LuckyLintSniff implements Sniff
         ];
         foreach ($expectedKeys as $expectedKey) {
             if (!array_key_exists($expectedKey, $phpcsToken)) {
-                throw new RuntimeException("{$expectedKey} is not found");
+                throw new RuntimeException("$expectedKey is not found");
             }
         }
 
@@ -92,8 +100,8 @@ class LuckyLintSniff implements Sniff
         );
     }
 
-    /** @return array<int, TargetToken>|null */
-    private function getTargetTokens(File $file, Token $token): ?array
+    /** @return array<int, TargetToken> */
+    private function getTargetTokens(File $file, Token $token): array
     {
         switch ($token->type) {
             case 'T_VARIABLE':
@@ -107,15 +115,15 @@ class LuckyLintSniff implements Sniff
             case 'T_STRING':
                 // define('CONST')
                 if ($token->content !== 'define') {
-                    return null;
+                    return [];
                 }
-                $next = $this->getToken($file, $token->seq + 1);
+                $next = $this->getTokenFromFile($file, $token->seq + 1);
                 if ($next->type !== 'T_OPEN_PARENTHESIS') {
-                    return null;
+                    return [];
                 }
-                $next = $this->getToken($file, $next->seq + 1);
+                $next = $this->getTokenFromFile($file, $next->seq + 1);
                 if ($next->type !== 'T_CONSTANT_ENCAPSED_STRING') {
-                    return null;
+                    return [];
                 }
                 return [
                     new TargetToken(
@@ -129,9 +137,9 @@ class LuckyLintSniff implements Sniff
             case 'T_FUNCTION':
             case 'T_AS':
                 // class A {
-                $next = $this->getToken($file, $token->seq + 2);
+                $next = $this->getTokenFromFile($file, $token->seq + 2);
                 if ($next->type !== 'T_STRING') {
-                    return null;
+                    return [];
                 }
                 return [
                     new TargetToken(
@@ -144,7 +152,7 @@ class LuckyLintSniff implements Sniff
                 $seq = $token->seq + 2;
                 $tokens = [];
                 while (true) {
-                    $next = $this->getToken($file, $seq);
+                    $next = $this->getTokenFromFile($file, $seq);
                     if ($next->type === 'T_STRING') {
                         $tokens[] = new TargetToken(
                             $next,
@@ -160,13 +168,13 @@ class LuckyLintSniff implements Sniff
                 // const CONST_ITEM = 0;
                 // const int CONST_ITEM = 0;
                 for ($seq1 = $token->seq + 1; ; $seq1++) {
-                    $next = $this->getToken($file, $seq1);
+                    $next = $this->getTokenFromFile($file, $seq1);
                     if ($next->type === 'T_EQUAL') {
                         break;
                     }
                 }
                 for ($seq2 = $seq1 - 1; ; $seq2--) {
-                    $prev = $this->getToken($file, $seq2);
+                    $prev = $this->getTokenFromFile($file, $seq2);
                     if ($prev->type === 'T_STRING') {
                         return [
                             new TargetToken(
@@ -177,7 +185,7 @@ class LuckyLintSniff implements Sniff
                     }
                 }
             default:
-                throw new RuntimeException("Unexpected token type: {$token->type}");
+                throw new RuntimeException("Unexpected token type: $token->type");
         }
     }
 }
