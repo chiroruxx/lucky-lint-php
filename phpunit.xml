@@ -4,14 +4,4 @@
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
         bootstrap="tests/bootstrap.php"
 >
-<!--    <testsuites>-->
-<!--        <testsuite name="Slevomat Coding Standard">-->
-<!--            <directory suffix="Test.php">./tests/</directory>-->
-<!--        </testsuite>-->
-<!--    </testsuites>-->
-<!--    <source>-->
-<!--        <include>-->
-<!--            <directory suffix=".php">SlevomatCodingStandard</directory>-->
-<!--        </include>-->
-<!--    </source>-->
 </phpunit>
