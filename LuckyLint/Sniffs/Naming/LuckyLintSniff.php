@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Chiroruxxxx\LuckyLint\LuckyLint\Sniffs\Naming;
+namespace Chiroruxxxx\LuckyLint\Sniffs\Naming;
 
 use InvalidArgumentException;
 use PHP_CodeSniffer\Files\File;
